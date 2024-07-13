@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Notes - ShiftMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fff9;
+            margin: 0;
+            padding: 0;
+            color: #6c9976;
+        }
+        nav {
+            background-color: #94aa99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        nav img {
+            height: 50px;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        nav li {
+            position: relative;
+            margin-right: 80px;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        nav a.task-manager::after,
+        nav a.shift-scheduler::after,
+        nav a.my-tasks::after {
+            content: ' ▼';
+            font-size: 0.8em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        nav .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #cbddcf;
+            font-size: 1em;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+        nav .dropdown a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+        }
+        nav li:hover .dropdown {
+            display: block;
+        }
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-menu button {
+            background-color: #d3d3d3;
+            color: #6c9976;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .user-menu .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #edeeed;
+            top: 100%;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+            text-align: left;
+        }
+        .user-menu .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 1em;
+            color: #94b39b;
+            text-decoration: none;
+        }
+        .user-menu .dropdown a:hover {
+            background-color: #4f6153;
+        }
+        .user-menu button:focus + .dropdown {
+            display: block;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .notes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .note {
+            background-color: #ffffff;
+            border: 1px solid #a8c3ae;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .archived-note {
+            background-color: #d3d3d3; /* Grey color for archived notes */
+        }
+        .note h2 {
+            color: #6c9976;
+            margin-top: 0;
+        }
+        .note p {
+            color: #6c9976;
+            margin: 5px 0;
+        }
+        .note .reminder-date {
+            color: #ff0000; /* Red color for reminder date */
+        }
+        .note .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .note button {
+            background-color: #94aa99;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .note button:hover {
+            background-color: #6c9976;
+        }
+        .archived-note-title {
+            cursor: pointer;
+            color: #6c9976;
+            font-weight: bold;
+            padding: 10px;
+            border: 1px solid #a8c3ae;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .archived-note-details {
+            display: none;
+            padding: 10px;
+            border: 1px solid #a8c3ae;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        footer {
+            background-color: #94aa99;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="logo_bar.png" alt="ShiftMaster Logo">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li>
+                <a href="#task-manager" class="task-manager">Task Manager</a>
+                <div class="dropdown">
+                    <a href="all_tasks.html">All Tasks</a>
+                    <a href="new_task.html">New Task</a>
+                </div>
+            </li>
+            <li>
+                <a href="#shift-scheduler" class="shift-scheduler">Shift Scheduler</a>
+                <div class="dropdown">
+                    <a href="weekly_shifts.html">Weekly Shifts</a>
+                    <a href="enter_shifts.html">Enter Shifts</a>
+                </div>
+            </li>
+            <li>
+                <a href="#my-notes" class="my-tasks">My Notes</a>
+                <div class="dropdown">
+                    <a href="all_notes.html">All Notes</a>
+                    <a href="new_note.html">New Note</a>
+                    <a href="archived_notes.html">Archived Notes</a>
+                </div>
+            </li>
+        </ul>
+        <div class="user-menu">
+            <button>Hadas Mayan</button>
+            <div class="dropdown">
+                <a href="log_in.html">Log Out</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="notes-container" id="notes-container">
+            <!-- Notes will be dynamically loaded here -->
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 ShiftMaster. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Change user role
+        async function changeUserRole(newRole) {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!loggedInUser) {
+                console.error('No logged-in user found.');
+                alert('You must be logged in to change user role.');
+                return;
+            }
+
+            const userUpdate = {
+                userId: {
+                    superapp: loggedInUser.superapp,
+                    email: loggedInUser.userEmail
+                },
+                role: newRole,
+                username: loggedInUser.username,
+            };
+
+            try {
+                const response = await axios.put(`http://localhost:8084/superapp/users/${loggedInUser.superapp}/${loggedInUser.userEmail}`, userUpdate);
+                console.log('User role updated:', response);
+            } catch (error) {
+                console.error('Error updating user role:', error);
+            }
+        }
+
+        // Fetch notes from the server
+        async function fetchNotes() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!loggedInUser) {
+                console.error('No logged-in user found.');
+                alert('You must be logged in to view notes.');
+                return [];
+            }
+
+            try {
+                const response = await axios.get('http://localhost:8084/superapp/objects', {
+                    params: {
+                        userSuperapp: loggedInUser.superapp,
+                        userEmail: loggedInUser.userEmail,
+                        type: 'note'
+                    }
+                });
+
+                console.log('Response received', response);
+                return response.data;
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+                return [];
+            }
+        }
+
+        // Update note status on the server
+        async function updateNoteStatus(noteId, newStatus) {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!loggedInUser) {
+                console.error('No logged-in user found.');
+                alert('You must be logged in to update notes.');
+                return null;
+            }
+
+            const noteUpdate = {
+                alias: newStatus
+            };
+
+            try {
+                const response = await axios.put(`http://localhost:8084/superapp/objects/${loggedInUser.superapp}/${noteId}`, 
+                noteUpdate, 
+                {
+                    params: {
+                        userSuperapp: loggedInUser.superapp,
+                        userEmail: loggedInUser.userEmail
+                    }
+                });
+
+                console.log('Response received', response);
+                return response.data;
+            } catch (error) {
+                console.error('Error updating note status:', error);
+                return null;
+            }
+        }
+
+        // Mark note as inactive on the server
+        async function markNoteInactive(noteId) {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!loggedInUser) {
+                console.error('No logged-in user found.');
+                alert('You must be logged in to mark notes as inactive.');
+                return null;
+            }
+
+            const noteUpdate = {
+                active: false
+            };
+
+            try {
+                const response = await axios.put(`http://localhost:8084/superapp/objects/${loggedInUser.superapp}/${noteId}`, 
+                noteUpdate, 
+                {
+                    params: {
+                        userSuperapp: loggedInUser.superapp,
+                        userEmail: loggedInUser.userEmail
+                    }
+                });
+
+                if (response.status === 200) {
+                    return response.data;
+                }
+            } catch (error) {
+                console.error('Error marking note as inactive:', error);
+                return null;
+            }
+        }
+
+        // Load notes and display them
+        async function loadNotes() {
+            await changeUserRole('MINIAPP_USER'); // Temporarily change role to SUPER_APP
+            const notes = await fetchNotes();
+            await changeUserRole('SUPERAPP_USER'); // Change role back to MINIAPP_USER
+            const notesContainer = document.getElementById('notes-container');
+            notesContainer.innerHTML = '';
+
+            const archivedNotes = notes.filter(note => note.alias === 'ARCHIVED');
+
+            archivedNotes.forEach(note => {
+                notesContainer.appendChild(createNoteElement(note));
+            });
+        }
+
+        function createNoteElement(note) {
+            const noteElement = document.createElement('div');
+            noteElement.classList.add('note');
+            noteElement.classList.add('archived-note');
+            noteElement.innerHTML = `
+                <div class="archived-note-title" onclick="toggleArchivedDetails('${note.objectId.id}')">${note.objectDetails.title}</div>
+                <div class="archived-note-details" id="archived-${note.objectId.id}">
+                    <p><strong>Content:</strong> ${note.objectDetails.content}</p>
+                    <p class="reminder-date"><strong>Reminder Date:</strong> ${note.objectDetails.reminderDate}</p>
+                    <div class="note-footer">
+                        <button onclick="toggleStatus('${note.objectId.id}', 'ACTIVE')">Activate</button>
+                        <button onclick="markInactive('${note.objectId.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+            return noteElement;
+        }
+
+        function toggleArchivedDetails(noteId) {
+            const details = document.getElementById(`archived-${noteId}`);
+            details.style.display = details.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function toggleStatus(noteId, newStatus) {
+            const note = await updateNoteStatus(noteId, newStatus);
+            alert(`The note has been ${newStatus.toLowerCase()}d.`);
+            window.location.href = 'archived_notes.html';
+            loadNotes(); // Reload notes to reflect changes
+        }
+
+        async function markInactive(noteId) {
+            const note = await markNoteInactive(noteId);
+            alert('The note has been deleted.');
+            window.location.href = 'archived_notes.html';
+            loadNotes(); // Reload notes to reflect changes
+        }
+
+        document.addEventListener('DOMContentLoaded', loadNotes);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (userData) {
+                const userMenuButton = document.getElementById('user-menu-button');
+                if (userMenuButton) {
+                    userMenuButton.textContent = userData.username;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

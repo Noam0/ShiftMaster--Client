@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Schedule - ShiftMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fff9;
+            margin: 0;
+            padding: 0;
+            color: #6c9976;
+        }
+        nav {
+            background-color: #94aa99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        nav img {
+            height: 50px;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        nav li {
+            position: relative;
+            margin-right: 80px; 
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        nav a.task-manager::after,
+        nav a.shift-scheduler::after,
+        nav a.my-tasks::after {
+            content: ' ▼';
+            font-size: 0.8em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        nav .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #cbddcf;
+            font-size: 1em;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+        nav .dropdown a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+        }
+        nav li:hover .dropdown {
+            display: block;
+        }
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-menu button {
+            background-color: #d3d3d3;
+            color: #6c9976;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+           
+        }
+        .user-menu .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #edeeed;
+            top: 100%;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+            text-align: left;
+        }
+        .user-menu .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 1em;
+            color: #94b39b;
+            text-decoration: none;
+        }
+        .user-menu .dropdown a:hover {
+            background-color: #4f6153;
+        }
+        .user-menu button:focus + .dropdown {
+            display: block;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.7em;
+            color: #6c9976;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 1.5em;
+            color: #8aae92;
+        }
+        .week-container {
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto; 
+            overflow-y: auto;
+            margin-top: 10px;
+            
+        }
+        .day-column {
+            background-color: #ffffff;
+            border: 1px solid #a8c3ae;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        .day-column h2 {
+            color: #8aae92;
+            font-size: 1.5em;
+        }
+        .shift {
+            background-color: #f9fff9;
+            border: 1px solid #a8c3ae;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .shift.morning {
+            background-color: #fffad4;
+        }
+        .shift.evening {
+            background-color: #ffe9d4;
+        }
+        .shift.night {
+            background-color: #e0eefa;
+        }
+        .shift h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #57795e;
+        }
+        .shift p {
+            margin: 7px 0;
+            color: #6c9976;
+        }
+        footer {
+            background-color: #94aa99;
+            color: #ffffff;
+            text-align: center;
+            padding: 3px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .manual-update {
+            text-align: center;
+           
+        }
+        .manual-update label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+      
+        .manual-update button {
+            background-color: #94aa99;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .manual-update button:hover {
+            background-color: #6c9976;
+        }
+        .manual-update label {
+     display: block;
+        margin-bottom: 5px; /* Reduced margin */
+     }
+
+        .manual-update #week-dates {
+        margin-top: 0; /* No top margin to reduce space */
+        }
+
+        #context-menu {
+         background: #ffffff;
+        border: 1px solid #a8c3ae;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        #context-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #context-menu li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #context-menu li:hover {
+            background: #f0f0f0;
+        }
+        .message-container {
+            position: fixed;
+            bottom: 62px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            color: green;
+            border: 1px solid green;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 300px;
+            text-align: center;
+            opacity: 0; /* Start invisible */
+            transition: opacity 0.5s ease-in-out; /* Smooth transition for both fade in and fade out */
+            display: none; /* Start hidden */
+        }
+
+
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="logo_bar.png" alt="ShiftMaster Logo">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li>
+                <a href="#task-manager" class="task-manager">Task Manager</a>
+                <div class="dropdown">
+                    <a href="all_tasks.html">All Tasks</a>
+                    <a href="new_task.html">New Task</a>
+                </div>
+            </li>
+            <li>
+                <a href="#shift-scheduler" class="shift-scheduler">Shift Scheduler</a>
+                <div class="dropdown">
+                    <a href="weekly_shifts.html">Weekly Shifts</a>
+                    <a href="create_schedule.html">Create Schedule</a>
+                </div>
+            </li>
+            <li>
+                <a href="#my-tasks" class="my-tasks">My Notes</a>
+                <div class="dropdown">
+                    <a href="all_notes.html">My Notes</a>
+                    <a href="new_note.html">New Note</a>
+                    <a href="archived_notes.html">Archive Notes</a>
+                </div>
+            </li>
+        </ul>
+        <div class="user-menu">
+            <button id="user-name-button">Hadas Mayan</button>
+            <div class="dropdown">
+                <a href="log_in.html">Log Out</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Create Schedule</h1>
+            <p>Generate and manage weekly shifts</p>
+        </div>
+        <div class="manual-update">
+            <label for="week-dates">Week Dates:</label>
+            <p id="week-dates">24/06 - 30/06</p>
+           <button id="generate-schedule-button">
+            <img src="magic.png" alt="Icon" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+            Generate Weekly Schedule</button>
+            <button id="publish-schedule-btn">
+                <img src="paper-plane.png" alt="Icon" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                Save and Publish Weekly Shifts
+
+            </button>
+        </div>
+
+        <div id="context-menu" style="display: none; position: absolute;">
+            <ul>
+                <li onclick="editShift()">Edit</li>
+                <li onclick="highlight()">Highlight</li>
+            </ul>
+        </div>
+
+
+        <div id="message-container" class="message-container" style="display: none;">
+            <p id="message-text"></p>
+        </div>
+
+        <div class="week-container" id="week-container" style="display: none;">
+        
+            <div class="week-container" id="week-container">
+                <!-- Monday -->
+                <div class="day-column" id="monday">
+                    <h2>Monday</h2>
+                    <div class="shift morning" id="monday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="monday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="monday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Tuesday -->
+                <div class="day-column" id="tuesday">
+                    <h2>Tuesday</h2>
+                    <div class="shift morning" id="tuesday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="tuesday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="tuesday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Wednesday -->
+                <div class="day-column" id="wednesday">
+                    <h2>Wednesday</h2>
+                    <div class="shift morning" id="wednesday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="wednesday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="wednesday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Thursday -->
+                <div class="day-column" id="thursday">
+                    <h2>Thursday</h2>
+                    <div class="shift morning" id="thursday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="thursday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="thursday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Friday -->
+                <div class="day-column" id="friday">
+                    <h2>Friday</h2>
+                    <div class="shift morning" id="friday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="friday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="friday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Saturday -->
+                <div class="day-column" id="saturday">
+                    <h2>Saturday</h2>
+                    <div class="shift morning" id="saturday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="saturday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="saturday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+                <!-- Sunday -->
+                <div class="day-column" id="sunday">
+                    <h2>Sunday</h2>
+                    <div class="shift morning" id="sunday-morning">
+                        <h3>Morning Shift</h3>
+                        <p>7:00 - 15:30</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift evening" id="sunday-evening">
+                        <h3>Evening Shift</h3>
+                        <p>14:30 - 23:00</p>
+                        <p>Workers:</p>
+                    </div>
+                    <div class="shift night" id="sunday-night">
+                        <h3>Night Shift</h3>
+                        <p>22:30 - 7:00</p>
+                        <p>Workers:</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 ShiftMaster. All rights reserved.</p>
+    </footer>
+    <script src="ShceduleGenerator.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="create_schudule_script.js"></script>
+    
+    <script>
+
+
+
+
+
+
+      
+      
+  /*
+        function displaySchedule(schedule) {
+            const weekContainer = document.getElementById('week-container');
+            weekContainer.innerHTML = '';
+
+            schedule.forEach(day => {
+                const dayColumn = document.createElement('div');
+                dayColumn.classList.add('day-column');
+                dayColumn.innerHTML = `<h2>${day.day}</h2>`;
+
+                day.shifts.forEach(shift => {
+                    const shiftElement = document.createElement('div');
+                    shiftElement.classList.add('shift', shift.type);
+                    shiftElement.innerHTML = `
+                        <h3>${shift.type} Shift</h3>
+                        <p>${shift.time}</p>
+                        <p>Workers: ${shift.workers.join(', ')}</p>
+                        <button onclick="editShift('${day.day}', '${shift.type}')">Edit</button>
+                    `;
+                    dayColumn.appendChild(shiftElement);
+                });
+
+                weekContainer.appendChild(dayColumn);
+            });
+        }
+
+        function editShift(day, type) {
+            const workers = prompt(`Enter workers for ${type} shift on ${day}:`);
+            if (workers) {
+                // Update shift on server
+                fetch('http://localhost:8084/superapp/edit_shift', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ day, type, workers: workers.split(', ') })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        displaySchedule(data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function publishSchedule() {
+            // Publish the schedule to all workers
+            fetch('http://localhost:8084/superapp/publish_schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ weekDates: document.getElementById('week-dates').value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert('Weekly schedule published successfully!');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        document.querySelector('.user-menu button').addEventListener('click', function() {
+            const dropdown = document.querySelector('.user-menu .dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.querySelectorAll('.user-menu .dropdown a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                const dropdown = document.querySelector('.user-menu .dropdown');
+                dropdown.style.display = 'none';
+            });
+        });
+        */
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Note - ShiftMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fff9;
+            margin: 0;
+            padding: 0;
+            color: #6c9976;
+        }
+        nav {
+            background-color: #94aa99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        nav img {
+            height: 50px;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        nav li {
+            position: relative;
+            margin-right: 80px;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        nav a.task-manager::after,
+        nav a.shift-scheduler::after,
+        nav a.my-tasks::after {
+            content: ' ▼';
+            font-size: 0.8em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        nav .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #cbddcf;
+            font-size: 1em;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+        nav .dropdown a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+        }
+        nav li:hover .dropdown {
+            display: block;
+        }
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-menu button {
+            background-color: #d3d3d3;
+            color: #6c9976;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .user-menu .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #edeeed;
+            top: 100%;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+            text-align: left;
+        }
+        .user-menu .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 1em;
+            color: #94b39b;
+            text-decoration: none;
+        }
+        .user-menu .dropdown a:hover {
+            background-color: #4f6153;
+        }
+        .user-menu button:focus + .dropdown {
+            display: block;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border: 1px solid #a8c3ae;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .form-container h2 {
+            color: #6c9976;
+            text-align: center;
+            padding: 10px;
+        }
+        h3 {
+            color: #6c9976;
+            text-align: left;
+            font-size: medium;
+            padding-left: 70px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 70%;
+            max-width: 700px;
+            padding: 20px;
+            border: 1px solid #a8c3ae;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 0 auto;
+            display: block;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .form-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-actions button {
+            background-color: #94aa99;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-actions button:hover {
+            background-color: #6c9976;
+        }
+        footer {
+            background-color: #94aa99;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="logo_bar.png" alt="ShiftMaster Logo">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li>
+                <a href="#task-manager" class="task-manager">Task Manager</a>
+                <div class="dropdown">
+                    <a href="all_tasks.html">All Tasks</a>
+                    <a href="new_task.html">New Task</a>
+                </div>
+            </li>
+            <li>
+                <a href="#shift-scheduler" class="shift-scheduler">Shift Scheduler</a>
+                <div class="dropdown">
+                    <a href="weekly_shifts.html">Weekly Shifts</a>
+                    <a href="enter_shifts.html">Enter Shifts</a>
+                </div>
+            </li>
+            <li>
+                <a href="#my-notes" class="my-tasks">My Notes</a>
+                <div class="dropdown">
+                    <a href="all_notes.html">All Notes</a>
+                    <a href="new_note.html">New Note</a>
+                    <a href="archived_notes.html">Archived Notes</a>
+                </div>
+            </li>
+        </ul>
+        <div class="user-menu">
+            <button id="user-menu-button">User</button>
+            <div class="dropdown">
+                <a href="log_in.html">Log Out</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="form-container">
+            <h2>Create New Note</h2>
+            <form id="new-note-form">
+                <div class="form-group">
+                    <h3>Title</h3>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <h3>Content</h3>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <h3>Reminder Date</h3>
+                    <input type="date" id="reminderDate" name="reminderDate">
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Create Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 ShiftMaster. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Document loaded and script running');
+    
+            document.getElementById('new-note-form').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                console.log('Form submission prevented, preparing data');
+    
+                const title = document.getElementById('title').value;
+                const content = document.getElementById('content').value;
+                const reminderDate = document.getElementById('reminderDate').value;
+    
+                // Assuming the logged-in user details are stored in localStorage
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    console.error('No logged-in user found.');
+                    alert('You must be logged in to create a note.');
+                    return;
+                }
+    
+                const objectBoundary = {
+                    type: 'note',
+                    alias: 'ACTIVE',
+                    location: null,
+                    active: true,
+                    createdBy: {
+                        userId: {
+                            superapp: loggedInUser.superapp,
+                            email: loggedInUser.userEmail
+                        }
+                    },
+                    objectDetails: {
+                        title: title,
+                        content: content,
+                        reminderDate: reminderDate
+                    }
+                };
+    
+                try {
+                    const response = await axios.post('http://localhost:8084/superapp/objects', objectBoundary, {
+                        params: {
+                            userSuperapp: loggedInUser.superapp,
+                            userEmail: loggedInUser.userEmail
+                        }
+                    });
+    
+                    console.log('Response received', response);
+    
+                    if (response.status === 200 || response.status === 201) {
+                        alert('Note created successfully.');
+                        window.location.href = 'all_notes.html'; // Redirect to all notes page
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error creating note: ' + error.message);
+                }
+            });
+    
+            const userData = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (userData) {
+                const userMenuButton = document.getElementById('user-menu-button');
+                if (userMenuButton) {
+                    userMenuButton.textContent = userData.username;
+                }
+            }
+        });
+    </script>    
+</body>
+</html>

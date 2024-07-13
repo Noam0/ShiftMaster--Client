@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tasks - Team Leader - ShiftMaster</title>
+    <style>
+        /* Common styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fff9;
+            margin: 0;
+            padding: 0;
+            color: #6c9976;
+        }
+        nav {
+            background-color: #94aa99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        nav img {
+            height: 50px;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        nav li {
+            position: relative;
+            margin-right: 80px;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        nav a.task-manager::after,
+        nav a.shift-scheduler::after,
+        nav a.my-tasks::after {
+            content: ' ▼';
+            font-size: 0.8em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        nav .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #cbddcf;
+            font-size: 1em;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+        nav .dropdown a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+        }
+        nav li:hover .dropdown {
+            display: block;
+        }
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-menu button {
+            background-color: #d3d3d3;
+            color: #6c9976;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .user-menu .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #edeeed;
+            top: 100%;
+            right: 0;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+            text-align: left;
+        }
+        .user-menu .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 1em;
+            color: #94b39b;
+            text-decoration: none;
+        }
+        .user-menu .dropdown a:hover {
+            background-color: #4f6153;
+        }
+        .user-menu button:focus + .dropdown {
+            display: block;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tasks-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .tasks-column {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .tasks-column h2 {
+            text-align: center;
+            color: #608669;
+        }
+        .critical {
+            background-color: #f28b82ce; 
+        }
+        .major {
+            background-color: #fbbd04c4;
+        }
+        .minor {
+            background-color: #aecbfab9; 
+        }
+        .task {
+            background-color: #ffffff;
+            border: 1px solid #a8c3ae;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .task h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #6c9976;
+        }
+        .task-details {
+            display: none;
+        }
+        .task-details p {
+            margin: 5px 0;
+        }
+        .task-details button {
+            background-color: #94aa99;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        footer {
+            background-color: #94aa99;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="logo_bar.png" alt="ShiftMaster Logo">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li>
+                <a href="#task-manager" class="task-manager">Task Manager</a>
+                <div class="dropdown">
+                    <a href="all_tasks.html">All Tasks</a>
+                    <a href="new_task.html">New Task</a>
+                </div>
+            </li>
+            <li>
+                <a href="#shift-scheduler" class="shift-scheduler">Shift Scheduler</a>
+                <div class="dropdown">
+                    <a href="weekly_shifts.html">Weekly Shifts</a>
+                    <a href="create_schedule.html">Create Schedule</a>
+                </div>
+            </li>
+            <li>
+                <a href="#my-notes" class="my-tasks">My Notes</a>
+                <div class="dropdown">
+                    <a href="all_notes.html">All Notes</a>
+                    <a href="new_note.html">New Note</a>
+                </div>
+            </li>
+        </ul>
+        <div class="user-menu">
+            <button>Hadas Mayan</button>
+            <div class="dropdown">
+                <a href="log_in.html">Log Out</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>All Tasks - Team Leader</h1>
+        <div class="tasks-container">
+            <div class="tasks-column critical">
+                <h2>Critical</h2>
+                <!-- Tasks will be dynamically loaded here -->
+            </div>
+            <div class="tasks-column major">
+                <h2>Major</h2>
+                <!-- Tasks will be dynamically loaded here -->
+            </div>
+            <div class="tasks-column minor">
+                <h2>Minor</h2>
+                <!-- Tasks will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 ShiftMaster. All rights reserved.</p>
+    </footer>
+    <script>
+        async function fetchTasks() {
+            try {
+                const response = await fetch('http://localhost:8084/tasks/team_leader');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const tasks = await response.json();
+                return tasks;
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+                return [];
+            }
+        }
+
+        async function updateTaskStatus(taskId, newStatus) {
+            try {
+                const response = await fetch(`http://localhost:8084/tasks/${taskId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error updating task status:', error);
+                return null;
+            }
+        }
+
+        async function loadTasks() {
+            const tasks = await fetchTasks();
+            const tasksContainer = document.querySelector('.tasks-container');
+            tasksContainer.innerHTML = '';
+
+            const criticalTasks = tasks.filter(task => task.priority === 'Critical');
+            const majorTasks = tasks.filter(task => task.priority === 'Major');
+            const minorTasks = tasks.filter(task => task.priority === 'Minor');
+
+            addTasksToColumn(criticalTasks, 'critical');
+            addTasksToColumn(majorTasks, 'major');
+            addTasksToColumn(minorTasks, 'minor');
+        }
+
+        function addTasksToColumn(tasks, priorityClass) {
+            const column = document.querySelector(`.${priorityClass}`);
+            tasks.forEach(task => {
+                column.appendChild(createTaskElement(task));
+            });
+        }
+
+        function createTaskElement(task) {
+            const taskElement = document.createElement('div');
+            taskElement.classList.add('task');
+            taskElement.innerHTML = `
+                <h3>${task.title}</h3>
+                <div class="task-details">
+                    <p><strong>Title:</strong> ${task.title}</p>
+                    <p><strong>Description:</strong> ${task.description}</p>
+                    <p><strong>Assignee:</strong> ${task.assignee}</p>
+                    <p><strong>Open Date:</strong> ${task.openDate}</p>
+                    <p><strong>Last Update:</strong> ${task.lastUpdate}</p>
+                    <p><strong>Priority:</strong> ${task.priority}</p>
+                    <p><strong>Status:</strong> ${task.status}</p>
+                    ${task.status === 'Waiting for Validation' ? `<button onclick="completeTask('${task.id}')">Complete</button>` : ''}
+                    ${task.status !== 'Waiting for Validation' ? `<button onclick="changeTaskStatus('${task.id}', 'In Progress')">In Progress</button>` : ''}
+                </div>
+            `;
+            taskElement.addEventListener('click', () => toggleTaskDetails(taskElement));
+            return taskElement;
+        }
+
+        function toggleTaskDetails(taskElement) {
+            const details = taskElement.querySelector('.task-details');
+            details.style.display = details.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function completeTask(taskId) {
+            const task = await updateTaskStatus(taskId, 'Complete');
+            if (task) {
+                loadTasks();
+            }
+        }
+
+        async function changeTaskStatus(taskId, status) {
+            const task = await updateTaskStatus(taskId, status);
+            if (task) {
+                loadTasks();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        document.querySelector('.user-menu button').addEventListener('click', function() {
+            const dropdown = document.querySelector('.user-menu .dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.querySelectorAll('.user-menu .dropdown a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                const dropdown = document.querySelector('.user-menu .dropdown');
+                dropdown.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

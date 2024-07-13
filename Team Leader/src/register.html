@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ShiftMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fff9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #6c9976;
+        }
+        .register-container {
+            background-color: #ffffff;
+            border: 1px solid #a8c3ae;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            width: 300px;
+        }
+        .register-container h2 {
+            color: #6c9976;
+            margin-bottom: 30px;
+            padding: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .form-group input {
+            width: 92%;
+            padding: 10px;
+            border: 1px solid #a8c3ae;
+            border-radius: 7px;
+            font-size: 1em;
+        }
+        .form-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .form-actions button {
+            background-color: #94aa99;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 60%;
+        }
+        .form-actions button:hover {
+            background-color: #6c9976;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register to ShiftMaster</h2>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="Confirm Password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            <div class="form-actions">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            if (document.getElementById('password').value !== document.getElementById('confirm-password').value) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Extract data from form
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const superapp = "2024b.Tal.Mizrahi";
+
+            const userObject = {
+                email: email,
+                role: "SUPERAPP_USER",
+                username: username,
+                avatar: "default"
+            };
+
+            try {
+                const response = await axios.post("http://localhost:8084/superapp/users", userObject);
+                console.log('Success:', response.data);
+                alert('User registered successfully!');
+
+                // Create user object boundary
+                const userObjectBoundary = {
+                    type: "Team Leader",
+                    alias: "default",
+                    location: {
+                        lat: null,
+                        lng: null
+                    },
+                    active: true,
+                    createdBy: {
+                        userId: {
+                            superapp: "2024b.Tal.Mizrahi",
+                            email: email
+                        }
+                    },
+                    objectDetails: {
+                        password: password,
+                        username: username // Ensure username is stored in object details
+                    }
+                };
+
+                const objectResponse = await axios.post("http://localhost:8084/superapp/objects", userObjectBoundary);
+                console.log('Object created:', objectResponse.data);
+
+                // Update user's avatar field with the generated objectId
+                const objectId = objectResponse.data.objectId.id;
+                const objectSuperapp = objectResponse.data.objectId.superapp;
+                const updatedUserObject = {
+                    ...userObject,
+                    avatar: objectSuperapp + "#" + objectId
+                };
+
+                await axios.put(`http://localhost:8084/superapp/users/${superapp}/${email}`, updatedUserObject, {
+                    params: {
+                        userSuperapp: superapp,
+                        userEmail: email,
+                        username: username // Ensure username is passed as a query parameter
+                    }
+                });
+                console.log('User updated with objectId:', updatedUserObject);
+                window.location.href = 'log_in.html'; // Redirect to login page
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error registering user: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
