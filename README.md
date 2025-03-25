@@ -2,6 +2,14 @@
 
 <p align="center">A web-based application for efficient shift scheduling and management</p>
 
+<div>
+  <img src="https://github.com/user-attachments/assets/3b24f633-fed5-498a-ba72-4db8b1156e87" alt="Screenshot 1" style="width:800px; height:auto;">
+   <img src="https://github.com/user-attachments/assets/dd99e44f-1744-468b-af60-0654287fcb8f" alt="Screenshot 5" style="width:800px; height:auto;">
+  <img src="https://github.com/user-attachments/assets/02a1cba6-d8c2-454b-be44-4ccd676d43c5" alt="Screenshot 2" style="width:800px; height:auto;">
+  <img src="https://github.com/user-attachments/assets/f27ec0c5-8f4b-4e2a-88da-6f34bdfb4df4" alt="Screenshot 3" style="width:800px; height:auto;">
+  <img src="https://github.com/user-attachments/assets/6633d128-f6d0-49ec-9742-fa5ff3ff2ef6" alt="Screenshot 4" style="width:800px; height:auto;">
+</div>
+
 <h2>🚀 Overview</h2>
 
 ShiftMaster Client is a comprehensive web application designed to streamline the process of generating and managing weekly shift schedules for workers. It offers an intuitive interface for both managers and workers, ensuring efficient and fair allocation of shifts while adhering to real-world scheduling constraints.
